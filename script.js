@@ -6,14 +6,24 @@ const MEDIA_IMAGE_SOURCE =
 const AUDIO_SRC = "assets/music.mp3";
 
 const NOTE = [
-  "No hice esto porque las cosas entre nosotros hayan sido siempre fáciles. Lo hice porque sé que no lo han sido.",
-  "Hemos tenido días muy buenos. También discusiones, cosas dichas de más y momentos en los que los dos tuvimos que aprender. Yo me equivoco. No siempre hago las cosas bien, y lo sé.",
-  "Aun así, cuando pienso en nosotros, sigo pensando en construir. En quedarme. En crecer contigo. En verte cumplir lo que quieres, en acompañarte en lo que estás aprendiendo y en lo que todavía ni sabemos que vamos a vivir.",
-  "Últimamente hablamos de tranquilidad, de confianza, de compromiso y de futuro. De sentir que esto vale la pena. Yo te escuché. Y me quedé con eso.",
-  "No siempre sé demostrarte lo que siento como quisiera. Estoy aprendiendo a quererte mejor.",
-  "Esto no es solo un regalo. Es mi forma de decirte que pensé en ti. Cuando me contaste lo que querías, no se me pasó. Sé que hay cosas que te hacen ilusión, y esta vez quería ser yo quien te diera una.",
-  "Te amo, Laura. ❤️",
+  "Escucho cuando me cuentas lo que quieres hacer, las cosas que quieres aprender, los proyectos que tienes en mente y todas esas ideas que poco a poco quieres convertir en realidad.",
+  "Y me gusta escucharte hablar de eso.",
+  "Porque tus sueños también me importan.",
+  "Quiero apoyarte en lo que quieras construir, acompañarte mientras aprendes, mientras pruebas cosas nuevas y mientras encuentras tu propio camino.",
+  "No quiero simplemente verte cumplir tus sueños desde lejos.",
+  "Quiero ser parte del equipo que los construye contigo. ❤️",
+  "Me gusta pensar en nosotros como un equipo.",
+  "Dos personas que se apoyan, que se escuchan, que crecen juntas y que poco a poco van construyendo la vida que quieren.",
+  "Y cuando pienso en el futuro, me gusta imaginar que seguimos ahí...",
+  "Tú y yo. Juntos. Construyendo nuestra vida, nuestros proyectos y nuestros sueños.",
+  "Y entonces recordé algo...",
+  "Algo que tú querías.",
+  "Algo que podía ayudarte con tus proyectos, con las cosas que quieres aprender, con tus ideas y también con esas cosas que simplemente quieres disfrutar.",
+  "Y pensé...",
+  "¿Por qué no hacerla realidad?",
 ];
+
+const NOTE_EMPHASIS = new Set([5, 9, 14]);
 
 const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const MOBILE = window.matchMedia("(max-width: 720px)").matches;
@@ -226,7 +236,7 @@ async function writeNote(sheet, hint) {
     if (!REDUCE) await delay(index === 0 ? 900 : 460);
     sheet.hidden = false;
     if (index === 0) sheet.classList.add("rise");
-    const paragraph = el("p", index === NOTE.length - 1 ? "closing" : "", NOTE[index]);
+    const paragraph = el("p", NOTE_EMPHASIS.has(index) ? "closing" : "", NOTE[index]);
     sheet.appendChild(paragraph);
   }
   hint.hidden = false;
@@ -238,7 +248,7 @@ function mountStory(root) {
   const name = el("h2", "name rise");
   name.append(document.createTextNode("Laura"), el("span", "", "❤️"));
   name.style.animationDelay = "0.15s";
-  const lead = el("p", "lead rise", "Hay cosas que a veces no sé cómo decirte...");
+  const lead = el("p", "lead rise", "Te escucho más de lo que a veces imaginas.");
   lead.style.animationDelay = "0.7s";
 
   const sheet = el("article", "sheet");
@@ -252,13 +262,15 @@ function mountStory(root) {
   void writeNote(sheet, hint);
 
   const pending = el("section", "chapter chapter-case");
-  const bridge = el("p", "bridge rise", "Pero todavía falta una cosa...");
+  const bridge = el("p", "bridge rise", "Esto es para ti.");
   bridge.style.animationDelay = "0.2s";
+  const care = el("p", "copy", "Lo hice con muchísimo cariño.");
+  care.style.animationDelay = "0.45s";
   const caseNode = buildCase();
   const open = el("button", "action plain", "Abrir ❤️");
   open.type = "button";
   open.id = "open";
-  pending.append(bridge, caseNode, open);
+  pending.append(bridge, care, caseNode, open);
 
   const reveal = el("section", "chapter chapter-reveal");
   reveal.id = "reveal";
@@ -280,36 +292,61 @@ function mountStory(root) {
   });
   frame.appendChild(image);
 
-  const soft = el("p", "soft", "Sí... finalmente pude ❤️");
+  const soft = el("p", "soft", "Sí... finalmente pude. ❤️");
   soft.style.animationDelay = "0.15s";
   const headline = el("h2", "headline", "Tu tablet.");
   headline.style.animationDelay = "0.4s";
-  const copyA = el(
-    "p",
-    "copy",
-    "Porque sé que quieres aprender, crear, jugar, hacer tus lives, descubrir cosas nuevas y construir poco a poco algo tuyo."
-  );
-  copyA.style.animationDelay = "0.7s";
-  const copyB = el(
-    "p",
-    "copy",
-    "Espero que esto sea apenas el comienzo de muchas cosas bonitas que puedas conseguir."
-  );
-  copyB.style.animationDelay = "1s";
+
+  const revealCopy = [
+    ["copy", "Porque te escuché."],
+    ["copy", "Porque sé que te hacía ilusión."],
+    ["copy", "Y porque quiero verte usarla para todas esas cosas que tienes en mente."],
+    ["copy", "Quiero que cuando la uses recuerdes algo."],
+    ["soft", "Que hay alguien que cree en ti."],
+    ["copy", "Que quiere verte crecer."],
+    ["copy", "Que quiere apoyarte en tus proyectos."],
+    ["copy", "Y que quiere estar ahí para ver todo lo que eres capaz de construir."],
+  ];
+
+  const letter = [
+    ["copy", "No sé exactamente cómo será nuestro futuro, pero sí sé cómo me gusta imaginarlo."],
+    ["copy", "Me gusta imaginar una vida contigo."],
+    ["copy", "Nuestros proyectos, nuestros planes, nuestras metas, nuestros momentos y todas esas pequeñas cosas que iremos construyendo juntos."],
+    ["copy", "Quiero que seamos un equipo durante todo ese camino."],
+    ["copy", "Y quiero que algún día podamos mirar hacia atrás y ver todo lo que construimos juntos, empezando por las cosas pequeñas que hoy nos hacen ilusión."],
+    ["soft", "Esto es solo una pequeña forma de decirte que te escucho, que creo en ti y que quiero acompañarte en todo lo que viene. ❤️"],
+  ];
+
+  let beat = 0.7;
+  const paced = revealCopy.map(([className, text]) => {
+    const node = el("p", className, text);
+    node.style.animationDelay = `${beat.toFixed(2)}s`;
+    beat += 0.28;
+    return node;
+  });
 
   const sign = el("div", "sign");
   const rule = el("div", "line");
   const forLine = el("p", "for", "Para ti, Laura ❤️");
-  forLine.style.animationDelay = "1.35s";
-  const byline = el("p", "byline", "Con amor,");
-  byline.style.animationDelay = "1.6s";
-  const by = el("p", "by", "Ángel");
-  by.style.animationDelay = "1.85s";
-  const last = el("p", "last", "Ahora sí... ve a buscar tu regalo. ❤️");
-  last.style.animationDelay = "2.2s";
-  sign.append(rule, forLine, byline, by, last);
+  forLine.style.animationDelay = `${beat.toFixed(2)}s`;
+  beat += 0.28;
+  const letterNodes = letter.map(([className, text]) => {
+    const node = el("p", className, text);
+    node.style.animationDelay = `${beat.toFixed(2)}s`;
+    beat += 0.28;
+    return node;
+  });
+  const byline = el("p", "byline", "Te amo.");
+  byline.style.animationDelay = `${beat.toFixed(2)}s`;
+  beat += 0.25;
+  const by = el("p", "by", "Ángel ❤️");
+  by.style.animationDelay = `${beat.toFixed(2)}s`;
+  beat += 0.3;
+  const last = el("p", "last", "Espero que te guste tanto como a mí me gustó prepararlo para ti.");
+  last.style.animationDelay = `${beat.toFixed(2)}s`;
+  sign.append(rule, forLine, ...letterNodes, byline, by, last);
 
-  reveal.append(frame, soft, headline, copyA, copyB, sign);
+  reveal.append(frame, soft, headline, ...paced, sign);
   root.append(note, pending, reveal);
 
   open.addEventListener("click", () => openCase(open, caseNode, reveal));
